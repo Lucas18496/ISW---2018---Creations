@@ -1,6 +1,13 @@
 # ISW - Presentacion 1:
 
-opcionCalc <- function(precioInicial, precioFinal, tLibreRiesgo, tMadurez, nInterval, nIter, volat){
+opcionCalc <- function(precioInicial, precioFinal, tLibreRiesgo, tMadurez, nInterval, nIter){
+	# Obteniendo Volatilidad:
+	data <- read.csv(file.choose(),header=T)
+	Close <- data$Close
+	Log_Close <- log(Close,base=exp(1))
+	volat <- sd(Log_Close)
+
+
 	vectEstimados <- c()
 	vectUtil <- c()
 	variablesIndependientes <- c()
