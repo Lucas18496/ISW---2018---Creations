@@ -1,6 +1,14 @@
-# ISW - Presentacion 1:
+# Para usar qrmtools:
+install.packages('qrmtools')
+library('qrmtools')
 
-opcionCalc <- function(precioInicial, precioFinal, tLibreRiesgo, tMadurez, nInterval, nIter){
+#Para comprobar, interesa la funcion:
+# Black_Scholes() de "qrmtools"
+
+# ISW - Presentacion 2:
+
+#Tiempo y tLibreRiesgo pensado en años:
+opcionCalc <- function(precioInicial, precioFinal, tLibreRiesgo, tMadurez, nInterval, nIter, callOp){
 	# Obteniendo Volatilidad:
 	data <- read.csv(file.choose(),header=T)
 	Close <- data$Close
@@ -17,7 +25,12 @@ opcionCalc <- function(precioInicial, precioFinal, tLibreRiesgo, tMadurez, nInte
 		for(j in 1:nInterval){
 			Xn <- Xn + tLibreRiesgo*Xn*tMadurez/nInterval + Xn*factorRandom[j]
 		}
-		vectUtil <- c(vectUtil, max((Xn-precioFinal),0))
+		
+		if(callOp == 0){
+			vectUtil <- c(vectUtil, max((precioFinal-Xn),0))
+		} else {
+			vectUtil <- c(vectUtil, max((Xn-precioFinal),0))
+		}
 
 		# Estima el valor de la opcion en intervalos de 200 iteraciones
 		#y para la última iteración:
