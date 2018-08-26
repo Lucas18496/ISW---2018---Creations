@@ -4,10 +4,7 @@
  * and open the template in the editor.
  */
 package ventana;
-import static java.lang.Float.parseFloat;
-import org.rosuda.REngine.REXPMismatchException;
-import org.rosuda.REngine.Rserve.RConnection;
-import org.rosuda.REngine.Rserve.RserveException;   
+import java.io.IOException;
 
 /**
  *
@@ -20,7 +17,6 @@ public class interfaz extends javax.swing.JFrame {
      */
     public interfaz() {
         initComponents();
-        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -47,7 +43,6 @@ public class interfaz extends javax.swing.JFrame {
         NumeroIntervalos = new javax.swing.JTextField();
         NumeroIter = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        answer = new javax.swing.JLabel();
         TipoOpcion = new javax.swing.JTextField();
         jLabelFondo = new javax.swing.JLabel();
 
@@ -55,7 +50,7 @@ public class interfaz extends javax.swing.JFrame {
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton1.setBackground(new java.awt.Color(51, 51, 51));
+        jButton1.setBackground(new java.awt.Color(153, 0, 0));
         jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("SALIR");
@@ -107,7 +102,7 @@ public class interfaz extends javax.swing.JFrame {
         getContentPane().add(NumeroIntervalos, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 230, 100, -1));
         getContentPane().add(NumeroIter, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 270, 100, -1));
 
-        jButton2.setBackground(new java.awt.Color(51, 51, 51));
+        jButton2.setBackground(new java.awt.Color(153, 0, 0));
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Calcular");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -116,11 +111,6 @@ public class interfaz extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 370, -1, -1));
-
-        answer.setFont(new java.awt.Font("Microsoft JhengHei", 0, 11)); // NOI18N
-        answer.setForeground(new java.awt.Color(255, 255, 255));
-        answer.setText("APROXIMACIÓN: ");
-        getContentPane().add(answer, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 370, -1, -1));
         getContentPane().add(TipoOpcion, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 310, 100, -1));
 
         jLabelFondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/fondo.jpg"))); // NOI18N
@@ -138,29 +128,26 @@ public class interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_precioActualActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        RConnection connection = null;
 
-        try {
-            /* Create a connection to Rserve instance running on default port
-             * 6311
-             */
-            connection = new RConnection();
-
-            connection.eval("source('C:/funcion.R')");
-            float precioInicial=Float.parseFloat(precioActual.getText());  
-            float precioFinal=Float.parseFloat(precioFinal1.getText());
-            float tLibreRiesgo=Float.parseFloat(Tasa.getText());
-            float tMadurez = Float.parseFloat(TiempoMadurez.getText());
-            float nInterval=Float.parseFloat(NumeroIntervalos.getText());
-            float nIter = Float.parseFloat(NumeroIter.getText());
-            float callOp = Float.parseFloat(TipoOpcion.getText());
-            float aprox=(float) connection.eval("opcionCalc("+precioInicial+","+precioFinal+","+tLibreRiesgo+","+tMadurez+","+nInterval+","+nIter+","+callOp+")").asDouble();
-            this.answer.setText("Aproximación:  "+aprox);
-        } catch (RserveException e) {
-            e.printStackTrace();
-        } catch (REXPMismatchException e) {
-            e.printStackTrace();
-        }   
+        Runtime rt = Runtime.getRuntime();
+        
+        float precioInicial=Float.parseFloat(precioActual.getText());  
+        float precioFinal=Float.parseFloat(precioFinal1.getText());
+        float tLibreRiesgo=Float.parseFloat(Tasa.getText());
+        float tMadurez = Float.parseFloat(TiempoMadurez.getText());
+        float nInterval=Float.parseFloat(NumeroIntervalos.getText());
+        float nIter = Float.parseFloat(NumeroIter.getText());
+        float callOp = Float.parseFloat(TipoOpcion.getText());
+        
+        try{
+            Process pr = rt.exec("cmd /c Rscript funcion.R "+precioInicial+" "+precioFinal+" "+tLibreRiesgo+" "+tMadurez+" "+nInterval+" "+nIter+" "+callOp);
+        }
+        catch(IOException ex){
+            System.out.println (ex.toString());
+            System.out.println("Error running R script");
+        }
+        
+        /*this.answer.setText("Aproximación:  "+aprox);*/
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
@@ -204,7 +191,6 @@ public class interfaz extends javax.swing.JFrame {
     private javax.swing.JTextField Tasa;
     private javax.swing.JTextField TiempoMadurez;
     private javax.swing.JTextField TipoOpcion;
-    private javax.swing.JLabel answer;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
