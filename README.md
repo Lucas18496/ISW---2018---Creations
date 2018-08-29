@@ -12,11 +12,9 @@ linux habría que hacer unas pequeñas modificaciones.
 
 ### Modo de uso:
 
-- Ejecutar OpPrice.jar
+- Ejecutar OpPrice.jar (en la carpeta ejecutable)
 - Ingresar datos seleccionados:
 	* Tiempo de madurez se ingresa en años
-	* Tipo de opción=1 para Call.
-	* Tipo de opción=0 para Put.
 	* Se recomiendan entre 1000 y 10000 intervalos; y 10000 iteraciones.
 - Se requiere la data histórica en formato .csv; luego de ejecutar el
 	cálculo (Calcular) se le pedirá seleccionar dicho archivo.
